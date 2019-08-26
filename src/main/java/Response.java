@@ -14,26 +14,36 @@ class Response {
 
     Response(String str) {
         String[] list = str.split("\\r?\\n");
+        List<String> stringList = new ArrayList<String>(Arrays.asList(list));
         content = Arrays.asList(list);
     }
 
-    //Method 1
     List<String> getContent() {
         return content;
     }
 
-    //Method 2
     void setContent(String str) {
         String[] list = str.split("\\r?\\n");
-        content = Arrays.asList(list);
+        List<String> stringList = new ArrayList<String>(Arrays.asList(list));
+        content = stringList;
     }
 
-    //Method 3
+    void clearContent() {
+        content.clear();
+    }
+
     void addArray(List<String> list) {
         content = list;
     }
 
-    //Method 4
+    void addTasks(List<Task> tasklist) {
+        for (int i = 0; i < tasklist.size(); i++) {
+            Task t = tasklist.get(i);
+            String taskWithStatus = t.getTaskWithStatus();
+            content.add((i+1) + "." + taskWithStatus);
+        }
+    }
+
     void print() {
         String wrap = "-";
         String wrapper = "    " + wrap.repeat(60);
