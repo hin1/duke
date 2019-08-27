@@ -41,14 +41,22 @@ public class Duke {
 
                 case "todo":
                     reply.clearContent();
-                    String todo = String.join(" ",arg);
-                    ToDo newTodo = new ToDo(todo);
-                    tasklist.add(newTodo);
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("The description of a todo cannot be empty.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        String todo = String.join(" ", arg);
+                        ToDo newTodo = new ToDo(todo);
+                        tasklist.add(newTodo);
 
-                    reply.setContent("Got it. I've added this task:\n"
-                                    + "  " + newTodo.toString()
-                                    + "\nNow you have " + tasklist.size() + " tasks in the list.");
-                    reply.print();
+                        reply.setContent("Got it. I've added this task:\n"
+                                + "  " + newTodo.toString()
+                                + "\nNow you have " + tasklist.size() + " tasks in the list.");
+                        reply.print();
+                    }
                     break;
 
                 case "deadline":
@@ -93,8 +101,11 @@ public class Duke {
                     break;
 
                 default:
-                    reply.setContent("Invalid Command");
-                    reply.print();
+                    try {
+                        throw new DukeException("I'm sorry, but I don't know what that means :-(");
+                    } catch (DukeException e) {
+                        e.print();
+                    }
             }
 
         }
