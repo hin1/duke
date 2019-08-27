@@ -1,3 +1,2 @@
-T | 0 | work
-E | 1 | orbital | tomorrow
-D | 0 | CS2113T | tonight
+D | 1 | finish work | 2/1/1997 0806
+D | 0 | see doctor | 3/3/2008 2301
