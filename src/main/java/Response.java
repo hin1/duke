@@ -39,7 +39,7 @@ class Response {
     void addTasks(List<Task> tasklist) {
         for (int i = 0; i < tasklist.size(); i++) {
             Task t = tasklist.get(i);
-            String taskWithStatus = t.getTaskWithStatus();
+            String taskWithStatus = t.toString();
             content.add((i+1) + "." + taskWithStatus);
         }
     }

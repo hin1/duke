@@ -11,7 +11,8 @@ public class Task {
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
     }
 
-    public String getTaskWithStatus() {
+    @Override
+    public String toString() {
         String checkbox = "[" + this.getStatusIcon() + "]";
         return (checkbox + " " + description);
     }
