@@ -96,35 +96,7 @@ public class Duke {
         fw.close();
     }
 
-    public static void main(String[] args) {
-
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-
-
-        System.out.println("Hello from\n" + logo);
-
-        Response intro = new Response("Hello! I'm Duke\n" + "What can I do for you?");
-        intro.print();
-
-        //INPUT
-        Scanner scan = new Scanner(System.in);
-
-        //Save (Level 7)
-
-        //Read file
-        List<Task> tasklist = null; //ADD FILEPATH
-        try {
-            tasklist = getTasks("/Users/seanchan/duke/data/duke.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //List<Task> tasklist = new ArrayList<Task>();
-
-        Response reply = new Response();
+    private static void handleCommand(Scanner scan, List<Task> tasklist, Response reply) {
         String input;
 
         while(!(input = scan.nextLine()).equals("bye")) {
@@ -162,44 +134,88 @@ public class Duke {
                     break;
 
                 case "deadline":
-                    reply.clearContent();
-                    int dueStart = Arrays.asList(arg).indexOf("/by");
-                    String[] dueArray = Arrays.copyOfRange(arg, dueStart + 1, arg.length);
-                    String[] descArray = Arrays.copyOfRange(arg, 0, dueStart);
-                    String due = String.join(" ", dueArray);
-                    String desc = String.join(" ", descArray);
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("The description of a deadline cannot be empty.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        reply.clearContent();
+                        int dueStart = Arrays.asList(arg).indexOf("/by");
 
-                    Deadline newDeadline = new Deadline(desc,due);
-                    tasklist.add(newDeadline);
-                    reply.setContent("Got it. I've added this task:\n"
-                                   + "  " + newDeadline.toString()
-                                   + "\nNow you have " + tasklist.size() + " tasks in the list.");
-                    reply.print();
+                        if (dueStart == -1) {
+                            try {
+                                throw new DukeException("Deadline date and time cannot be identified. Try again!");
+                            } catch (DukeException e) {
+                                e.print();
+                                handleCommand(scan, tasklist, reply);
+                            }
+                        }
+
+                        String[] dueArray = Arrays.copyOfRange(arg, dueStart + 1, arg.length);
+                        String[] descArray = Arrays.copyOfRange(arg, 0, dueStart);
+                        String due = String.join(" ", dueArray);
+                        String desc = String.join(" ", descArray);
+
+                        Deadline newDeadline = new Deadline(desc, due);
+                        tasklist.add(newDeadline);
+                        reply.setContent("Got it. I've added this task:\n"
+                                + "  " + newDeadline.toString()
+                                + "\nNow you have " + tasklist.size() + " tasks in the list.");
+                        reply.print();
+                    }
                     break;
 
                 case "event":
-                    reply.clearContent();
-                    int atStart = Arrays.asList(arg).indexOf("/at");
-                    String[] atArray = Arrays.copyOfRange(arg, atStart + 1, arg.length);
-                    String[] eventArray = Arrays.copyOfRange(arg, 0, atStart);
-                    String at = String.join(" ", atArray);
-                    String event = String.join(" ", eventArray);
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("The description of an event cannot be empty.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        reply.clearContent();
+                        int atStart = Arrays.asList(arg).indexOf("/at");
 
-                    Event newEvent = new Event(event,at);
-                    tasklist.add(newEvent);
-                    reply.setContent("Got it. I've added this task:\n"
-                                    + "  " + newEvent.toString()
-                                    + "\nNow you have " + tasklist.size() + " tasks in the list.");
-                    reply.print();
+                        if (atStart == -1) {
+                            try {
+                                throw new DukeException("Event date and time cannot be identified. Try again!");
+                            } catch (DukeException e) {
+                                e.print();
+                                handleCommand(scan, tasklist, reply);
+                            }
+                        }
+
+                        String[] atArray = Arrays.copyOfRange(arg, atStart + 1, arg.length);
+                        String[] eventArray = Arrays.copyOfRange(arg, 0, atStart);
+                        String at = String.join(" ", atArray);
+                        String event = String.join(" ", eventArray);
+
+                        Event newEvent = new Event(event, at);
+                        tasklist.add(newEvent);
+                        reply.setContent("Got it. I've added this task:\n"
+                                + "  " + newEvent.toString()
+                                + "\nNow you have " + tasklist.size() + " tasks in the list.");
+                        reply.print();
+                    }
                     break;
 
                 case "done":
-                    Task doneTask = tasklist.get(Integer.parseInt(arg[0]) - 1);
-                    doneTask.markAsDone();
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("Task number not specified.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        Task doneTask = tasklist.get(Integer.parseInt(arg[0]) - 1);
+                        doneTask.markAsDone();
 
-                    String doneMsg = "Nice! I've marked this task as done:\n";
-                    reply.setContent(doneMsg + "  " + doneTask.toString());
-                    reply.print();
+                        String doneMsg = "Nice! I've marked this task as done:\n";
+                        reply.setContent(doneMsg + "  " + doneTask.toString());
+                        reply.print();
+                    }
                     break;
 
                 default:
@@ -217,6 +233,39 @@ public class Duke {
             }
 
         }
+    }
+
+
+    public static void main(String[] args) {
+
+        String logo = " ____        _        \n"
+                + "|  _ \\ _   _| | _____ \n"
+                + "| | | | | | | |/ / _ \\\n"
+                + "| |_| | |_| |   <  __/\n"
+                + "|____/ \\__,_|_|\\_\\___|\n";
+
+
+        System.out.println("Hello from\n" + logo);
+
+        Response intro = new Response("Hello! I'm Duke\n" + "What can I do for you?");
+        intro.print();
+
+        //INPUT
+        Scanner scan = new Scanner(System.in);
+
+        //Save (Level 7)
+
+        //Read file
+        List<Task> tasklist = null; //ADD FILEPATH
+        try {
+            tasklist = getTasks("/Users/seanchan/duke/data/duke.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Response reply = new Response();
+        handleCommand(scan, tasklist, reply);
+
         reply.setContent("Bye. Hope to see you again soon!");
         reply.print();
     }
