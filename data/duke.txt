@@ -1,2 +1,3 @@
 D | 0 | print | today
 D | 1 | work | tomorrow
+T | 1 | work
