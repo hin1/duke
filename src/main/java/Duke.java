@@ -153,6 +153,29 @@ public class Duke {
                             message.print();
                         }
                     }
+                    break;
+
+                case "find":
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("Keyword not specified.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        String keyword = arg[0];
+                        List<Task> tasksFound = new ArrayList<Task>();
+                        for (Task t : tasklist) {
+                            String desc = t.getDescription();
+                            if (desc.contains(keyword)) {
+                                tasksFound.add(t);
+                            }
+                        }
+
+                        reply.setContent("Here are the matching tasks in your list:\n");
+                        reply.addTasks(tasksFound);
+                        reply.print();
+                    }
 
                     break;
 
