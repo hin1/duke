@@ -10,8 +10,12 @@ src/main/resources/docs/
 
 # MacOS custom attributes files created by Finder
 .DS_Store
+
+#Git text files
+/data/duke.txt
+/text-ui-test/
+
 *.iml
 bin/
 
-# Text files
-duke*.txt
+

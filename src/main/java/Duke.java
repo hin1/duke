@@ -10,92 +10,6 @@ import java.io.FileWriter;
 
 public class Duke {
 
-    private static List<Task> getTasks(String filePath) throws FileNotFoundException {
-        List<Task> tasklist = new ArrayList<Task>();
-        File f = new File(filePath);
-        Scanner s = new Scanner(f);
-
-        while(s.hasNext()) {
-            String task = s.nextLine();
-            String[] taskArray = task.split(" \\| ");
-
-            Task newTask = null;
-
-            if (taskArray[0].equals("T")) {
-                newTask = new ToDo(taskArray[taskArray.length - 1]);
-            } else if (taskArray[0].equals("D")) {
-                newTask = new Deadline(taskArray[taskArray.length - 2], taskArray[taskArray.length - 1]);
-            } else if (taskArray[0].equals("E")) {
-                newTask = new Event(taskArray[taskArray.length - 2], taskArray[taskArray.length - 1]);
-            } else {
-                try {
-                    throw new DukeException("Invalid task type");
-                } catch (DukeException e) {
-                    e.print();
-                }
-            }
-            //Check if task is done
-            if (taskArray[1].equals("1")) {
-                newTask.markAsDone();
-            }
-            tasklist.add(newTask);
-        }
-
-        return tasklist;
-    }
-
-    private static void writeTasks(String filePath, List<Task> tasklist) throws IOException {
-        FileWriter fw = new FileWriter(filePath);
-
-        for (Task t: tasklist) {
-
-            String[] lineArray = new String[4];
-
-            //Check type of task
-            if (t instanceof ToDo) {
-                lineArray[0] = "T";
-            } else if (t instanceof Deadline) {
-                lineArray[0] = "D";
-                lineArray[3] = ((Deadline) t).getBy();
-            } else if (t instanceof Event) {
-                lineArray[0] = "E";
-                lineArray[3] = ((Event) t).getAt();
-            } else {
-                try {
-                    throw new DukeException("Invalid Task: " + t.getDescription());
-                } catch (DukeException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Check if task is done
-            if (t.getStatusIcon() == "\u2713") {
-                lineArray[1] = "1";
-            } else if (t.getStatusIcon() == "\u2718") {
-                lineArray[1] = "0";
-            } else {
-                try {
-                    throw new DukeException("Invalid status of task: " + t.getDescription());
-                } catch (DukeException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Check description
-            lineArray[2] = t.getDescription();
-
-            //Combine
-            if (lineArray[3] == null) {
-                lineArray = Arrays.copyOfRange(lineArray, 0, 3);
-            }
-            String line = String.join(" | ",lineArray);
-            fw.write(line);
-            fw.write(System.lineSeparator());
-        }
-
-        fw.close();
-    }
-
     private static void handleCommand(Scanner scan, List<Task> tasklist, Response reply) {
         String input;
 
@@ -218,6 +132,30 @@ public class Duke {
                     }
                     break;
 
+                case "delete":
+                    if (arg.length == 0) {
+                        try {
+                            throw new DukeException("Task number not specified.");
+                        } catch (DukeException e) {
+                            e.print();
+                        }
+                    } else {
+                        try {
+                            Task taskToDelete = tasklist.get(Integer.parseInt(arg[0]) - 1);
+                            tasklist.remove(taskToDelete);
+
+                            reply.setContent("Noted. I've removed this task:\n"
+                                    + "  " + taskToDelete.toString()
+                                    + "\nNow you have " + tasklist.size() + " tasks in the list.");
+                            reply.print();
+                        } catch (IndexOutOfBoundsException e1) {
+                            Response message = new Response("Task number is out of bounds.");
+                            message.print();
+                        }
+                    }
+
+                    break;
+
                 default:
                     try {
                         throw new DukeException("I'm sorry, but I don't know what that means :-(");
@@ -268,5 +206,91 @@ public class Duke {
 
         reply.setContent("Bye. Hope to see you again soon!");
         reply.print();
+    }
+
+    private static List<Task> getTasks(String filePath) throws FileNotFoundException {
+        List<Task> tasklist = new ArrayList<Task>();
+        File f = new File(filePath);
+        Scanner s = new Scanner(f);
+
+        while(s.hasNext()) {
+            String task = s.nextLine();
+            String[] taskArray = task.split(" \\| ");
+
+            Task newTask = null;
+
+            if (taskArray[0].equals("T")) {
+                newTask = new ToDo(taskArray[taskArray.length - 1]);
+            } else if (taskArray[0].equals("D")) {
+                newTask = new Deadline(taskArray[taskArray.length - 2], taskArray[taskArray.length - 1]);
+            } else if (taskArray[0].equals("E")) {
+                newTask = new Event(taskArray[taskArray.length - 2], taskArray[taskArray.length - 1]);
+            } else {
+                try {
+                    throw new DukeException("Invalid task type");
+                } catch (DukeException e) {
+                    e.print();
+                }
+            }
+            //Check if task is done
+            if (taskArray[1].equals("1")) {
+                newTask.markAsDone();
+            }
+            tasklist.add(newTask);
+        }
+
+        return tasklist;
+    }
+
+    private static void writeTasks(String filePath, List<Task> tasklist) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+
+        for (Task t: tasklist) {
+
+            String[] lineArray = new String[4];
+
+            //Check type of task
+            if (t instanceof ToDo) {
+                lineArray[0] = "T";
+            } else if (t instanceof Deadline) {
+                lineArray[0] = "D";
+                lineArray[3] = ((Deadline) t).getBy();
+            } else if (t instanceof Event) {
+                lineArray[0] = "E";
+                lineArray[3] = ((Event) t).getAt();
+            } else {
+                try {
+                    throw new DukeException("Invalid Task: " + t.getDescription());
+                } catch (DukeException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Check if task is done
+            if (t.getStatusIcon() == "\u2713") {
+                lineArray[1] = "1";
+            } else if (t.getStatusIcon() == "\u2718") {
+                lineArray[1] = "0";
+            } else {
+                try {
+                    throw new DukeException("Invalid status of task: " + t.getDescription());
+                } catch (DukeException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Check description
+            lineArray[2] = t.getDescription();
+
+            //Combine
+            if (lineArray[3] == null) {
+                lineArray = Arrays.copyOfRange(lineArray, 0, 3);
+            }
+            String line = String.join(" | ",lineArray);
+            fw.write(line);
+            fw.write(System.lineSeparator());
+        }
+
+        fw.close();
     }
 }
