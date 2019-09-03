@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public class Deadline extends Task{
 
-    protected String by;
+    private String by;
 
     public Deadline(String description, String by) {
         super(description);
@@ -47,9 +47,9 @@ public class Deadline extends Task{
             int hour = dateTimeFormatted.getHour();
             if (hour == 0) {
                 time =  "12." + minute + "am";
-            } else if ((hour >= 12) && (hour < 24)) {
+            } else if (hour >= 12) {
                 time = (hour - 12) + "." + minute + "pm";
-            } else if (hour < 12) {
+            } else { // (hour < 12)
                 time = hour + "." + minute + "am";
             }
 
@@ -58,7 +58,7 @@ public class Deadline extends Task{
         } catch (DateTimeException e1) {
             //e1.printStackTrace();
             //Response errorMessage = new Response("Invalid date and time format");
-            //errorMessage.print();
+            //thiserrorMessage.print();
             return by;
 
         }
