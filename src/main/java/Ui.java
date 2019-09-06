@@ -13,18 +13,18 @@ public class Ui {
         //content = new ArrayList<String>();
     }
 
+    public void showLine() {
+        String wrap = "-";
+        String wrapper = "\t" + wrap.repeat(100);
+
+        System.out.println(wrapper);
+    }
+
     public void print(String message) {
         String[] content = message.split("\\r?\\n");
-        String wrap = "-";
-        String wrapper = "    " + wrap.repeat(100);
-
-        System.out.println(wrapper);
-
         for (String s : content) {
-            System.out.println("    " + s);
+            System.out.println("\t" + s);
         }
-
-        System.out.println(wrapper);
     }
 
     public String readCommand() {
@@ -40,11 +40,19 @@ public class Ui {
 
         System.out.println("Hello from\n" + logo);
 
+        showLine();
         print("Hello! I'm Duke\n" + "What can I do for you?");
+        showLine();
     }
 
     public void showLoadingError() {
+        showLine();
         print("Lists of tasks cannot be properly loaded.");
+        showLine();
+    }
+
+    public void showError(String errorMsg) {
+        print(errorMsg);
     }
 }
 

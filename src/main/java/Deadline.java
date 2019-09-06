@@ -3,9 +3,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.Locale;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.time.LocalDateTime;
 
 public class Deadline extends Task{
@@ -42,7 +39,7 @@ public class Deadline extends Task{
             }
 
             //Time
-            String time = "13.00pm";
+            String time;
             String minute = String.format("%02d",dateTimeFormatted.getMinute());
             int hour = dateTimeFormatted.getHour();
             if (hour == 0) {
@@ -56,9 +53,7 @@ public class Deadline extends Task{
             return (day + " of " + month + " " + year + ", " + time);
 
         } catch (DateTimeException e1) {
-            //e1.printStackTrace();
-            //Response errorMessage = new Response("Invalid date and time format");
-            //thiserrorMessage.print();
+
             return by;
 
         }

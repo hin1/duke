@@ -8,8 +8,6 @@ public class DukeException extends Exception {
 
     private String message = "\u2639 " + "OOPS!!! ";
 
-    //protected Response exceptionReply = new Response();
-
     public DukeException(String errorMessage) {
         message += errorMessage;
         //exceptionReply.setContent("\u2639 " + "OOPS!!! " + errorMessage);
