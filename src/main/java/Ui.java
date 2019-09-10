@@ -1,18 +1,22 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Represents the user interface that the user inputs and receives responses from Duke.
+ */
 public class Ui {
 
     private Scanner input;
-    //private List<String> content;
 
+    /**
+     * Constructor for a Ui object that creates a Scanner object for the user to type input.
+     */
     public Ui() {
         input = new Scanner(System.in);
-        //content = new ArrayList<String>();
     }
 
+    /**
+     * Creates a line which is the top/bottom wrapper for the response message from Duke.
+     */
     public void showLine() {
         String wrap = "-";
         String wrapper = "\t" + wrap.repeat(100);
@@ -20,6 +24,11 @@ public class Ui {
         System.out.println(wrapper);
     }
 
+    /**
+     * Prints a response message from Duke.
+     *
+     * @param message the response message to be printed.
+     */
     public void print(String message) {
         String[] content = message.split("\\r?\\n");
         for (String s : content) {
@@ -27,10 +36,18 @@ public class Ui {
         }
     }
 
+    /**
+     * Gets the user inputted command to be parsed.
+     *
+     * @return command as a user input
+     */
     public String readCommand() {
         return input.nextLine();
     }
 
+    /**
+     * Shows the introduction of Duke.
+     */
     public void showWelcome() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -45,12 +62,20 @@ public class Ui {
         showLine();
     }
 
+    /**
+     * Shows error message when the list of tasks cannot be loaded
+     * from the external file.
+     */
     public void showLoadingError() {
         showLine();
         print("Lists of tasks cannot be properly loaded.");
         showLine();
     }
 
+    /**
+     * Shows an error message when there is error in Duke.
+     * @param errorMsg error message to be printed
+     */
     public void showError(String errorMsg) {
         print(errorMsg);
     }

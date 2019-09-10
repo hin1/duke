@@ -7,14 +7,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Storage that helps to manage the task list externally in a text file.
+ */
 public class Storage {
 
     private String file;
 
+    /**
+     * Constructor for a Storage object which contains a filepath to a text file.
+     *
+     * @param filepath
+     */
     public Storage(String filepath)  {
         file = filepath;
     }
 
+    /**
+     * Returns a List of Task objects loaded and interpreted from
+     * an external text file.
+     *
+     * @return List of Task objects representing the task list
+     * @throws DukeException
+     */
     public List<Task> load() throws DukeException {
         List<Task> tasklist = new ArrayList<Task>();
         try {
@@ -59,6 +74,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the task list from Duke into the external text file
+     * upon completion of each command.
+     *
+     * @param tasklist list of tasks to save
+     * @throws IOException
+     */
     public void save(TaskList tasklist) throws IOException {
         FileWriter fw = new FileWriter(file);
 

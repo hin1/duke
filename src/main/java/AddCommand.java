@@ -1,14 +1,21 @@
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * A command that adds tasks (todos, events and deadlines) into a task list within Duke.
+ */
 public class AddCommand extends Command {
-
-    public enum TaskType {
-        TODO, EVENT, DEADLINE
-    }
 
     private Task taskToAdd;
 
+    /**
+     * Constructor for an AddCommand object that contains a task to be added
+     * into the task list.
+     *
+     * @param keyword the type of task that is to be added: todo, event or deadline.
+     * @param arguments the description of the task.
+     * @throws DukeException
+     */
     public AddCommand(String keyword, String[] arguments) throws DukeException {
         if (arguments.length == 0) {
             throw new DukeException("The description of the " + keyword + " cannot be empty.");
@@ -55,6 +62,15 @@ public class AddCommand extends Command {
         }
     }
 
+    /**
+     * Executes the command to add the identified task from
+     * the arguments into the list.
+     *
+     * @param tasks list of tasks to add the new task into
+     * @param ui user interface that prints the response to inform the reader about the task added
+     * @param storage storage where the list of tasks is saved to after the new task is added
+     * @throws DukeException
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
 
@@ -74,6 +90,11 @@ public class AddCommand extends Command {
         }
     }
 
+    /**
+     * Checks if the command is a ByeCommand object.
+     *
+     * @return false since it is not a ByeCommand.
+     */
     @Override
     public boolean isExit() {
         return false;
